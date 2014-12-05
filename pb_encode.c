@@ -207,6 +207,8 @@ static bool checkreturn encode_basic_field(pb_ostream_t *stream,
     
     func = PB_ENCODERS[PB_LTYPE(field->type)];
     
+    // TODO(simo): for oneof fields skip to an enum containing the tag of the actually filled in field
+    // then only encode if we're currently considering that field
     if (field->size_offset)
         pSize = (const char*)pData + field->size_offset;
     else

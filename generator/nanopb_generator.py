@@ -523,16 +523,34 @@ class ExtensionField(Field):
 #                   Generation of messages (structures)
 # ---------------------------------------------------------------------------
 
+# TODO(simo): finish code-gen for fields in a union
+# TODO(simo): finish code-gen for an anonymous enum named "which_{name}" to indicate which union member is filled in
+# which_ needs to follow union in our struct for same reasons as has_ needs to follow value
+class OneOf:
+    def __init__(self, desc):
+        self.name = desc.name
+        self.fields = []
 
 class Message:
     def __init__(self, names, desc, message_options):
         self.name = names
         self.fields = []
-        
+        self.oneofs = []
+
+        for od in desc.oneof_decl:
+            self.oneofs.append(OneOf(od))
+
+
         for f in desc.field:
             field_options = get_nanopb_suboptions(f, message_options, self.name + f.name)
-            if field_options.type != nanopb_pb2.FT_IGNORE:
-                self.fields.append(Field(self.name, f, field_options))
+            if field_options.type == nanopb_pb2.FT_IGNORE:
+                continue
+            field = Field(self.name, f, field_options)
+
+            if f.HasField("oneof_index"):
+                self.oneofs[f.oneof_index].fields.append(field)
+            else:
+                self.fields.append(field)
         
         if len(desc.extension_range) > 0:
             field_options = get_nanopb_suboptions(desc, message_options, self.name + 'extensions')

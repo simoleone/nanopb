@@ -191,6 +191,7 @@ typedef uint8_t pb_type_t;
 #define PB_ATYPE_POINTER  0x80
 #define PB_ATYPE_CALLBACK 0x40
 #define PB_ATYPE_MASK     0xC0
+//TODO(simo): add an ATYPE for enums of a ONEOF
 
 #define PB_ATYPE(x) ((x) & PB_ATYPE_MASK)
 #define PB_HTYPE(x) ((x) & PB_HTYPE_MASK)
@@ -375,7 +376,7 @@ struct pb_extension_s {
 #endif
 
 /* This is used to inform about need to regenerate .pb.h/.pb.c files. */
-#define PB_PROTO_HEADER_VERSION 30
+#define PB_PROTO_HEADER_VERSION 31
 
 /* These macros are used to declare pb_field_t's in the constant array. */
 /* Size of a structure member, in bytes. */
@@ -486,16 +487,17 @@ struct pb_extension_s {
  * - Field type:   BOOL, BYTES, DOUBLE, ENUM, FIXED32, FIXED64,
  *                 FLOAT, INT32, INT64, MESSAGE, SFIXED32, SFIXED64
  *                 SINT32, SINT64, STRING, UINT32, UINT64 or EXTENSION
- * - Field rules:  REQUIRED, OPTIONAL or REPEATED
+ * - Field rules:  REQUIRED, OPTIONAL, or REPEATED
  * - Allocation:   STATIC or CALLBACK
  * - Placement: FIRST or OTHER, depending on if this is the first field in structure.
  * - Message name
  * - Field name
  * - Previous field name (or field name again for first field)
+ * - Oneof name
  * - Pointer to default value or submsg fields.
  */
 
-#define PB_FIELD(tag, type, rules, allocation, placement, message, field, prevfield, ptr) \
+#define PB_FIELD(tag, type, rules, allocation, placement, message, field, prevfield, oneof, ptr) \
         PB_ ## rules ## _ ## allocation(tag, message, field, \
         PB_DATAOFFSET_ ## placement(message, field, prevfield), \
         PB_LTYPE_MAP_ ## type, ptr)

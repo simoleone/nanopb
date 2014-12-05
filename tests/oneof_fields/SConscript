@@ -1,0 +1,4 @@
+# Test that oneof fields are properly generated, encoded, and decoded
+Import("env")
+
+env.NanopbProto(["sample"])

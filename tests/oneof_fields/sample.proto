@@ -1,0 +1,13 @@
+message SubMessage {
+  optional string stuff = 1;
+  optional uint32 morestuff = 2;
+}
+
+message SampleMessage {
+  optional string data = 1;
+
+  oneof test_oneof {
+    string name = 4;
+    SubMessage sub_message = 9;
+  }
+}

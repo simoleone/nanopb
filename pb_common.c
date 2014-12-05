@@ -17,6 +17,7 @@ bool pb_field_iter_begin(pb_field_iter_t *iter, const pb_field_t *fields, void *
     return (iter->pos->tag != 0);
 }
 
+// TODO(simo): don't advance pData unless we're considering the last option in a oneof field
 bool pb_field_iter_next(pb_field_iter_t *iter)
 {
     const pb_field_t *prev_field = iter->pos;
